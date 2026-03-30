@@ -1,0 +1,30 @@
+name: Rocky Linux 8.6 Build Environment
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on Rocky Linux 8.6
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t rocky86-build .
+
+      - name: Show compiler versions
+        run: |
+          docker run --rm rocky86-build gcc --version
+          docker run --rm rocky86-build g++ --version
+          docker run --rm rocky86-build clang --version
+          docker run --rm rocky86-build cmake --version
+          docker run --rm rocky86-build make --version
